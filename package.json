@@ -1,0 +1,24 @@
+{
+  "name": "next-token",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy-token-eth": "npx hardhat run .\\scripts\\1_deploy_TokenEth.js --network localhost",
+    "deploy-token-bsc": "npx hardhat run .\\scripts\\2_deploy_TokenBsc.js --network localhost",
+    "deploy-distribution": "npx hardhat run .\\scripts\\3_deploy_Distribution.js --network localhost"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^4.3.2",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.1",
+    "hardhat": "^2.6.7"
+  }
+}
