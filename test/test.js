@@ -98,7 +98,7 @@ describe("Private Distribution", function () {
     console.log("deployed successfully to test localhost, with account: ", owner.address);
   });
   it("Should be initialized", async function () {
-    const initialTimestamp = Date.now()
+    const initialTimestamp = parseInt(Date.now() / 1000)
     const setInitialTimestamp = await distribution.setInitialTimestamp(initialTimestamp)
     const getInitalTimestamp = await distribution.getInitialTimestamp()
     expect(initialTimestamp).to.equal(parseInt(getInitalTimestamp._hex, 16))
@@ -109,7 +109,7 @@ describe("Private Distribution", function () {
 
   })
   it("Should be able to add and fetch investors", async function () {
-    const setInitialTimestamp = await distribution.setInitialTimestamp(Date.now())
+    const setInitialTimestamp = await distribution.setInitialTimestamp(parseInt(Date.now() / 1000))
     const getInitalTimestamp = await distribution.getInitialTimestamp()
     const addInvestors = await distribution.addInvestors([address1.address, address2.address], [1100, 900])
     const investor1 = await distribution.investorsInfo(address1.address)
@@ -124,17 +124,24 @@ describe("Private Distribution", function () {
     console.log("information of investors, Investor 2", `exists: ${investor2.exists}`, ` withdrawnTokens: ${investor2.withdrawnTokens} `, ` tokensAllotment: ${investor2.tokensAllotment} `)
   });
   it("Contract owner should not be able to withdraw tokens", async function () {
-    const setInitialTimestamp = await distribution.setInitialTimestamp(Date.now())
+    const setInitialTimestamp = await distribution.setInitialTimestamp(parseInt(Date.now() / 1000))
     const addInvestors = await distribution.addInvestors([address1.address, address2.address], [1100, 900])
     await expect(
       distribution.withdrawTokens()
     ).to.be.revertedWith("Only investors allowed");
   });
-  it("Investor Cannot withdraw token, until they are available", async function () {
-    const setInitialTimestamp = await distribution.setInitialTimestamp(Date.now())
-    const addInvestors = await distribution.addInvestors([address1.address, address2.address], [1100, 900])
-    await expect(
-      distribution.connect(address1).withdrawTokens()
-    ).to.be.revertedWith("no tokens available to withdraw.");
-  });
+  // it("Investor Cannot withdraw token, until they are available", async function () {
+  //   const setInitialTimestamp = await distribution.setInitialTimestamp(parseInt(Date.now() / 1000))
+  //   const addInvestors = await distribution.addInvestors([address1.address, address2.address], [1100, 900])
+  //   const withdrawableTokens = await distribution.withdrawableTokens(address1.address)
+  //   console.log(withdrawableTokens.toString())
+  //   await expect(
+  //     distribution.connect(address1).withdrawTokens()
+  //   ).to.be.revertedWith("no tokens available to withdraw.");
+  // });
+  it("checks if the funds are released after 1 days", async function () {
+    const setInitialTimestamp = await distribution.setInitialTimestamp(parseInt(Date.now() / 1000) - 86400);
+    const addInvestors = await distribution.addInvestors([address1.address, address2.address], [ethers.utils.parseEther("1000"), ethers.utils.parseEther("900")])
+    const withdrawableTokens = await distribution.withdrawableTokens(address1.address)
+  })
 });

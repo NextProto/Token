@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./BokkyPooBahsDateTimeLibrary.sol";
+import "hardhat/console.sol";
 
 contract FMTPrivateDistribution is Ownable {
     event InvestorsAdded(
@@ -209,7 +210,6 @@ contract FMTPrivateDistribution is Ownable {
             1e18) / _noOfRemaingDays;
 
         uint256 currentTimeStamp = block.timestamp;
-
         if (currentTimeStamp > _initialTimestamp) {
             if (currentTimeStamp <= oneDays) {
                 return uint256(25) * 1e18;
