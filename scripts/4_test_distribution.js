@@ -16,7 +16,7 @@ async function main() {
     [owner, tokenOwner, account1, account2, account3, account4, account5] = await ethers.getSigners();
 
     const investors = [account1.address, account2.address, account3.address, account4.address, account5.address];
-    const tokensAllotment = [300, 250, 150, 500, 300]
+    const tokensAllotment = [ethers.utils.parseEther("300"), ethers.utils.parseEther("250"), ethers.utils.parseEther("150"), ethers.utils.parseEther("500"), ethers.utils.parseEther("300")]
 
     const TokenEth = await hre.ethers.getContractFactory("TokenEth");
     const tokenEth = await TokenEth.connect(tokenOwner).deploy();
@@ -28,7 +28,7 @@ async function main() {
     console.log("the token contract is defined with tokens: ", parseInt(totalTokenBalance.toString()) / (10 ** 18))
     await tokenEth.connect(tokenOwner).transfer(owner.address, ethers.utils.parseEther("1500"))
     const ownerBalance = await tokenEth.balanceOf(owner.address)
-    console.log("toekn transfered to the distribution contract owner: ", ownerBalance.toString() / (10 ** 18))
+    console.log("token transfered to the distribution contract owner: ", ownerBalance.toString() / (10 ** 18))
 
     // We get the contract to deploy
     const tokenContract = tokenEth.address;
