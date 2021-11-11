@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./BokkyPooBahsDateTimeLibrary.sol";
+
 import "hardhat/console.sol";
 
-contract FMTPrivateDistribution is Ownable {
+contract DurationPrivateDistribution is Ownable {
     event InvestorsAdded(
         address[] investors,
         uint256[] tokenAllocations,
@@ -34,8 +34,10 @@ contract FMTPrivateDistribution is Ownable {
 
     event RecoverToken(address indexed token, uint256 indexed amount);
 
-    uint256 private constant _remainingDistroPercentage = 75;
-    uint256 private constant _noOfRemaingDays = 270;
+    uint256 private constant _remainingDistroPercentage = 90;
+    uint256 private constant _noOfRemaingDays = 540;
+    uint256 private constant SECONDS_PER_DAY = 24 * 60 * 60;
+    uint256 private constant _durationDays = 90;
 
     IERC20 private _fmtToken;
     uint256 private _totalAllocatedAmount;
@@ -78,6 +80,15 @@ contract FMTPrivateDistribution is Ownable {
 
     function getInitialTimestamp() public view returns (uint256 timestamp) {
         return _initialTimestamp;
+    }
+
+    function _diffDays(uint256 fromTimestamp, uint256 toTimestamp)
+        internal
+        pure
+        returns (uint256 _days)
+    {
+        require(fromTimestamp <= toTimestamp);
+        _days = (toTimestamp - fromTimestamp) / SECONDS_PER_DAY;
     }
 
     /// @dev release tokens to all the investors
@@ -198,32 +209,32 @@ contract FMTPrivateDistribution is Ownable {
         view
         returns (uint256 availablePercentage)
     {
-        // 2,680,000 FMT assigned
-        // 670,000 tokens on TGE - 25% on TGE
-        // 2,010,000 tokens distributed for 270 days - 75% remaining
-        // 2,010,000/270 = 7,444.4444 tokens per day
-        // 75/270 = 0.2778% every day released
+        // x Token assigned
+        // 10% on TGE
+        // tokens distributed for 540 days - 90% remaining
+        // 90 days duaration 
+        // x * (x *.90) / int(days elapsed/90)  = every period released
         uint256 oneDays = _initialTimestamp + 1 days;
-        uint256 vestingDuration = _initialTimestamp + 270 days;
+        uint256 vestingDuration = _initialTimestamp + 540 days;
 
-        uint256 everyDayReleasePercentage = (_remainingDistroPercentage *
-            1e18) / _noOfRemaingDays;
+        uint256 everyPeriodReleasePercentage = (_remainingDistroPercentage *
+            1e18) / (_noOfRemaingDays / _durationDays);
 
         uint256 currentTimeStamp = block.timestamp;
         if (currentTimeStamp > _initialTimestamp) {
             if (currentTimeStamp <= oneDays) {
-                return uint256(25) * 1e18;
+                return uint256(10) * 1e18;
             } else if (
                 currentTimeStamp > oneDays && currentTimeStamp < vestingDuration
             ) {
-                uint256 noOfDays = BokkyPooBahsDateTimeLibrary.diffDays(
+                uint256 noOfDays = _diffDays(
                     _initialTimestamp,
                     currentTimeStamp
                 );
-                uint256 currentUnlockedPercentage = noOfDays *
-                    everyDayReleasePercentage;
-
-                return (uint256(25) * 1e18) + currentUnlockedPercentage;
+                uint noOfPeriods = noOfDays / 90;
+                uint256 currentUnlockedPercentage = noOfPeriods *
+                    everyPeriodReleasePercentage;
+                return (uint256(10) * 1e18) + currentUnlockedPercentage;
             } else {
                 return uint256(100) * 1e18;
             }

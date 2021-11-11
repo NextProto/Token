@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const tokenContract = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-  const PrivateDistribution = await hre.ethers.getContractFactory("FMTPrivateDistribution");
+  const PrivateDistribution = await hre.ethers.getContractFactory("TGEPrivateDistribution");
   const distribution = await PrivateDistribution.deploy(tokenContract);
   const initialTimestamp = Date.now()
 
