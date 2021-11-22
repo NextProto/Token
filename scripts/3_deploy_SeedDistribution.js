@@ -15,15 +15,15 @@ async function main() {
 
   // We get the contract to deploy
   const tokenContract = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-  const PrivateDistribution = await hre.ethers.getContractFactory("TGEPrivateDistribution");
+  const PrivateDistribution = await hre.ethers.getContractFactory("SeedDistribution");
   const distribution = await PrivateDistribution.deploy(tokenContract);
-  const initialTimestamp = Date.now()
+  const initialTimestamp = Date.now()/1000
 
   await distribution.deployed();
   await distribution.setInitialTimestamp(initialTimestamp)
   const isInitialized = await distribution.isInitialized()
 
-  console.log("Private Distribution deployed to:", distribution.address, "\n initial timestamp is setup to be: ", initialTimestamp);
+  console.log("SeedDistribution deployed to:", distribution.address, "\n initial timestamp is setup to be: ", initialTimestamp);
   console.log("Contract is initialized? ", isInitialized)
 
 }
