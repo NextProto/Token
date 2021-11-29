@@ -54,11 +54,11 @@ describe("Token on Eth", function () {
   it("Should successfully deploy", async function () {
     console.log("deployed successfully to test localhost, with account: ", owner.address);
   });
-  it("should be deployed with 1m of the tokens for the owner of the contract.", async function () {
+  it("should be deployed with 50000 of the tokens for the owner of the contract.", async function () {
     const decimals = await tokenEth.decimals();
     const ownerBalance = ethers.utils.formatEther(await tokenEth.balanceOf(owner.address));
     console.log(ownerBalance)
-    expect(await tokenEth.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("2000"))
+    expect(await tokenEth.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("500000000"))
   })
   it("Should let you lend tokens to another account", async function () {
     await tokenEth.transfer(address1.address, ethers.utils.parseEther("100"))

@@ -35,7 +35,7 @@ contract PrivateDistribution is Ownable {
     event RecoverToken(address indexed token, uint256 indexed amount);
 
     uint256 private constant _remainingDistroPercentage = 95;
-    uint256 private constant _noOfRemaingDays = 630;
+    uint256 private constant _noOfRemaingDays = 540;
     uint256 private constant SECONDS_PER_DAY = 24 * 60 * 60;
     uint256 private constant _durationDays = 90;
 

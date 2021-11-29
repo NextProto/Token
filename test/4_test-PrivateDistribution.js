@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
-describe("Duration Distribution", function () {
+describe("private Distribution", function () {
 
     let owner;
     let distribution;
@@ -79,7 +79,7 @@ describe("Duration Distribution", function () {
         const withdrawableTokens = await distribution.withdrawableTokens(address1.address)
         expect(withdrawableTokens).to.equal(ethers.utils.parseEther("55.000000000000000000"))
     })
-    it("Should be able to add and fetch investors after withdrawl", async function () {
+    it("Should be able to withdraw after 90 days", async function () {
         const setInitialTimestamp = await distribution.setInitialTimestamp(parseInt(Date.now() / 1000) - (86400 * 90))
         const getInitalTimestamp = await distribution.getInitialTimestamp()
         const addInvestors = await distribution.addInvestors([address1.address, address2.address], [ethers.utils.parseEther("1100"), ethers.utils.parseEther("900")])
